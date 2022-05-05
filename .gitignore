@@ -263,27 +263,3 @@ dmypy.json
 !.vscode/extensions.json
 *.code-workspace
 
-# End of https://www.toptal.com/developers/gitignore/api/intellij,vscode,python
-mobile/application/**/app/android/
-mobile/application/**/app/ios/
-.idea/dictionaries/
-common/environment_variables.json
-#.DS_Store
-.DS_Store
-
-# Capabilities json template
-**/capabilities*.json
-!**/capabilities_template.json
-
-# Sonnar Analysis
-.scannerwork
-
-# Report
-**/report.html
-**/reports*
-
-# Segment validation report
-**/segment_validation_report.json
-
-# Azure Git credentials
-azure-git*
