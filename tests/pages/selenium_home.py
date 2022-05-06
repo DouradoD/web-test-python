@@ -1,7 +1,7 @@
 from tests.mappings.selenium_mapping import SeleniumMapping
 
 
-class Selenium:
+class SeleniumHome:
     def __init__(self, driver):
         self.driver = driver
         self.selenium_mapping = SeleniumMapping()

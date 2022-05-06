@@ -1,5 +1,5 @@
 from pytest_bdd import scenarios, when, then, parsers
-from tests.pages.selenium_actions import Selenium
+from tests.pages.page_factory import Pages
 
 scenarios('../features/open_screen.feature')
 
@@ -9,6 +9,6 @@ def impl(driver, url):
     driver.get(url)
 
 
-@then('the Selenium io screen should be visible')
+@then('the Selenium screen should be visible')
 def impl(driver):
-    Selenium(driver=driver).is_on_focus()
+    Pages.selenium_home(driver).is_on_focus()
