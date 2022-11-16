@@ -12,3 +12,4 @@ source "$VENV_PATH"/bin/activate
 echo "Updating venv site packages..."
 pip install pip setuptools -U
 pip install -r requirements.txt
+./install.sh
