@@ -1,4 +1,4 @@
-from config import page
+from tests.config import page
 
 
 @page(name='selenium_home')

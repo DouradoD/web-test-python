@@ -1,5 +1,5 @@
 from selenium.webdriver.common.by import By
-from config import mapping
+from tests.config import mapping
 
 
 @mapping(name='selenium_home')
