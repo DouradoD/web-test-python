@@ -263,3 +263,5 @@ dmypy.json
 !.vscode/extensions.json
 *.code-workspace
 
+#HTML report
+tests/*.html
