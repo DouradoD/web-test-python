@@ -1,0 +1,8 @@
+{
+  "platform": "web",
+  "web-docker": false,
+  "environment": "",
+  "capabilities": {
+    "browser": "chrome"
+  }
+}
