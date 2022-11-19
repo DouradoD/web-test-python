@@ -91,26 +91,35 @@ def main():
         return
     tests_path = f'{os.path.dirname(os.path.abspath(__file__))}'
     # Pytest commands: https://gist.github.com/amatellanes/12136508b816469678c2
-    pytest_caps = [
-        '--verbose',
-        '--capture=tee-sys',  # https://docs.pytest.org/en/6.2.x/capture.html
-        '-rA',  # Terminal Summary, more information: https://docs.pytest.org/en/latest/how-to/output.html
-        '--tb=short',  # Terminal Summary, short result: https://docs.pytest.org/en/latest/how-to/output.html
-        '--log-cli-level=INFO',  # Terminal Color
-        '-W ignore::UserWarning',  # Ignore Warnings, more information: https://docs.pytest.org/en/6.2.x/warnings.html
-        '--color=yes'  # Terminal Color
+    pytest_commands = [
+        '--verbose',  # Increase verbosity
+        '--capture', 'tee-sys',
+        '--tb=auto',
+        '--log-cli-level=INFO',
+        '--color=yes',
+        '--code-highlight=yes',
+        '--log-date-format=%m/%d/%Y %I:%M:%S %p',
+        '--log-format',
+        'BEES - %(asctime)s - %(levelname)s - %(message)s (%(filename)s:%(lineno)d)',
+        '--show-capture=no'
+        # '--verbose',
+        # '--capture=tee-sys',  # https://docs.pytest.org/en/6.2.x/capture.html
+        # '-rA',  # Terminal Summary, more information: https://docs.pytest.org/en/latest/how-to/output.html
+        # '--tb=short',  # Terminal Summary, short result: https://docs.pytest.org/en/latest/how-to/output.html
+        # '--log-cli-level=INFO',  # Terminal Color
+        # '-W ignore::UserWarning',  # Ignore Warnings, more information: https://docs.pytest.org/en/6.2.x/warnings.html
+        # '--color=yes'  # Terminal Color
     ]
     try:
-        parsed_pytest_args = parse_pytest_args(pytest_args=pytest_args)
-        pytest_caps += parsed_pytest_args
+        pytest_commands += [tests_path]
     except ValueError:
         if not args.help:
             raise
     if args.help:
-        exit_code = pytest.main([*pytest_caps, '--help'])
+        exit_code = pytest.main([*pytest_commands, '--help'])
     else:
         reporting_args = ['--html', 'report.html', '--self-contained-html'] if '--html' not in pytest_args else []
-        exit_code = pytest.main([*pytest_caps, tests_path, *reporting_args])
+        exit_code = pytest.main([*pytest_commands, *pytest_args, *reporting_args])
     sys.exit(exit_code)
 
 

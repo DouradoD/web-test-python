@@ -1,8 +1,26 @@
 {
-  "platform": "web",
-  "web-docker": false,
-  "environment": "",
+  "session": {
+    "browserstack.user": "diogoaugustodefa1",
+    "browserstack.key": "sWfTic4cnsBxXynsWowh",
+    "browserstack": false,
+    "platformName": "web",
+    "environment": "uat",
+    "headless": true,
+    "web_docker": false
+  },
   "capabilities": {
-    "browser": "chrome"
+    "web": {
+      "browserstack": {
+        "browserName": "chrome",
+        "os": "",
+        "os_version": "",
+        "browserstack.debug": true,
+        "browserstack.networkLogs": true,
+        "resolution": "1920x1080"
+      },
+      "local": {
+        "browserName": "chrome"
+      }
+    }
   }
 }

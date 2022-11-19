@@ -1,6 +1,14 @@
+""" Utils """
 import argparse
 import re
-from importlib.metadata import distribution
+from selenium.webdriver import ChromeOptions, EdgeOptions, FirefoxOptions
+from selenium.webdriver.common.options import ArgOptions
+from selenium.webdriver.safari.options import Options as SafariOptions
+
+from tests.config.constants import Browser
+
+_BROWSER_OPTION_MAP = {Browser.CHROME: ChromeOptions, Browser.FIREFOX: FirefoxOptions, Browser.EDGE: EdgeOptions,
+                       Browser.SAFARI: SafariOptions}
 
 # Args
 _CAPABILITIES_PYTEST_ARG = '--capabilities'
@@ -27,6 +35,30 @@ _PLATFORM_NAME_PATTERN = rf'{_PLATFORM_NAME_CAPABILITY}=(?P<{_PLATFORM_NAME_PATT
 _MOBILE_FOLDER = 'mobile'
 _WEB_FOLDER = 'web'
 _TESTS_FOLDER = 'tests'
+
+
+# Since selenium 4.0.0, desired capabilities are provided through Options objects
+def caps_to_options(browser_name, desired_capabilities):
+    """ Converts the desired capabilities' dictionary into a browser specific Options object
+
+    Parameters
+    ----------
+    browser_name: Enum/str
+        The browser name.
+    desired_capabilities: dict
+        The desired capabilities' dictionary.
+
+    Returns
+    -------
+    ArgOptions
+        The options object with the desired capabilities' information
+
+    """
+    options_class = _BROWSER_OPTION_MAP.get(browser_name, ArgOptions)
+    options = options_class()
+    for k, v in desired_capabilities.items():
+        options.set_capability(k, v)
+    return options
 
 
 def get_args():
@@ -118,3 +150,42 @@ def get_project(pytest_args, cfg_file_session_data):
     if cfg_file_session_data:
         return cfg_file_session_data.get(_PROJECT_SESSION_INFO)
     raise ValueError(f'The "{_PROJECT_SESSION_INFO}" must be provided via command line or capabilities file.')
+
+
+class LoadCmdLineCapabilities(argparse.Action):
+    """Overrides the default argparse.Action (store) to get the capabilities from command line as a list of whitespaces
+    separated key=value pairs
+
+    """
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        """ Overrides the default argparse.Action __call_ method
+
+        Builds a dictionary from the key=value pairs retrieved from command line
+
+        Parameters
+        ----------
+        parser: argparse.ArgumentParser
+            The parser from command line
+        namespace: argparse.Namespace
+            The namespace to store the attributes
+        values: list
+            The list carrying each key=value pair
+        option_string: str
+            Option string for specific parsing
+
+        Returns
+        -------
+        NoneType
+
+        """
+        setattr(namespace, self.dest, {})
+        for value in values:
+            key, value = value.split('=')
+            value_str = value.casefold()
+            # Checking if value is a boolean
+            if value_str == 'true':
+                value = True
+            elif value_str == 'false':
+                value = False
+            getattr(namespace, self.dest)[key] = value

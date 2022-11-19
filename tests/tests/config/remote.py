@@ -7,6 +7,9 @@ from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
 from .page_factory import Pages
+from .session_info import get_execution_data
+from .constants import Capabilities
+from .utils.utils import caps_to_options
 
 
 class Browser:
@@ -35,7 +38,7 @@ class BrowserNotSupportedForLocalRunException(Exception):
     """
 
 
-def web_driver_cls_factory(browser_name, web_docker=None):
+def web_driver_cls_factory(browser_name, browserstack, web_docker=None):
     """ Gets the proper WebRemote class according to the inputs
 
     Parameters
@@ -59,7 +62,9 @@ def web_driver_cls_factory(browser_name, web_docker=None):
     """
 
     driver_manager = None
-    if web_docker:
+    if browserstack:
+        base_cls = Remote
+    elif web_docker:
         base_cls = Remote
     else:
         try:
@@ -85,9 +90,9 @@ def web_driver_cls_factory(browser_name, web_docker=None):
             Returns:
                 Custom selenium driver
             """
-            # desired_capabilities.pop('platformName', None)
-            # options = caps_to_options(browser_name, desired_capabilities)
-            params = dict(options={}, **other_params)
+            desired_capabilities.pop(Capabilities.PLATFORM_NAME, None)
+            options = caps_to_options(browser_name, desired_capabilities)
+            params = dict(options=options, **other_params)
             if web_docker and not command_executor:
                 # This command executor is used to run the tests using the selinium hub!
                 # To do it, we need to pass the executor using the following structure:
@@ -104,13 +109,30 @@ def web_driver_cls_factory(browser_name, web_docker=None):
 
 def driver_factory(desired_capabilities=None,
                    command_executor=None,
+                   config_file=None,
+                   session_info=None,
                    web_docker=False,
+                   environment=None,
+                   browserstack=None,
+                   browserstack_user=None,
+                   browserstack_key=None,
                    **other_params):
-    class RemoteDriver(web_driver_cls_factory(desired_capabilities.get('browser'))):
+    if not (session_info and desired_capabilities):
+        session_info, desired_capabilities = get_execution_data(config_file=config_file,
+                                                                cmd_line_caps=desired_capabilities,
+                                                                command_executor=command_executor,
+                                                                environment=environment,
+                                                                browserstack=browserstack,
+                                                                browserstack_user=browserstack_user,
+                                                                browserstack_key=browserstack_key,
+                                                                web_docker=web_docker)
+
+    class RemoteDriver(web_driver_cls_factory(browser_name=desired_capabilities.get('browserName'),
+                                              browserstack=session_info.browserstack)):
 
         def __init__(self):
             self._desired_capabilities = desired_capabilities
-            self._command_executor = command_executor
+            self._command_executor = session_info.command_executor
             self._other_params = other_params
             super().__init__(desired_capabilities=self._desired_capabilities,
                              command_executor=self._command_executor,
