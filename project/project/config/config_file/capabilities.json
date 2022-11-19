@@ -1,0 +1,71 @@
+{
+  "session": {
+    "platformName" : "android",
+    "browserstack.user": "diogoaugustodefa1",
+    "browserstack.key": "sWfTic4cnsBxXynsWowh",
+    "browserstack": false,
+    "environment": "uat",
+    "headless": false,
+    "web_docker": false
+  },
+  "capabilities": {
+    "web": {
+      "browserstack": {
+        "browserName": "chrome",
+        "os": "",
+        "os_version": "",
+        "browserstack.debug": true,
+        "browserstack.networkLogs": true,
+        "resolution": "1920x1080"
+      },
+      "local": {
+        "browserName": "chrome"
+      }
+    },
+    "android": {
+      "browserstack": {
+        "app": "",
+        "device": "",
+        "platformName": "android",
+        "os_version": "",
+        "app_version": "",
+        "app_version_id": "",
+        "app_force_download": false,
+        "fullReset": true,
+        "browserstack.debug": true,
+        "browserstack.networkLogs": true
+      },
+      "local": {
+        "platformName": "android",
+        "automationName": "UiAutomator2",
+        "app": "/Users/diogodourado/Downloads/testing.apk",
+        "deviceName": "",
+        "app_version": "",
+        "app_version_id": "",
+        "app_force_download": false
+      }
+    },
+    "ios": {
+      "browserstack": {
+        "platformName": "ios",
+        "os_version": "",
+        "app_version": "",
+        "app_version_id": "",
+        "app_force_download": false,
+        "autoDismissAlerts": true,
+        "fullReset": true,
+        "browserstack.debug": true,
+        "browserstack.networkLogs": true
+      },
+      "local": {
+        "platformName": "ios",
+        "automationName": "XCUITest",
+        "app": "",
+        "deviceName": "",
+        "app_version": "",
+        "app_version_id": "",
+        "app_force_download": false
+      }
+    }
+  }
+}
